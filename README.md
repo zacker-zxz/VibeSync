@@ -27,7 +27,7 @@ A smart music recommendation application that curates personalized playlists bas
 ```bash
 # Clone the repository
 git clone https://github.com/zacker-zxz/VibeSync.git
-cd context-music-app
+cd VibeSync
 
 # Install dependencies
 npm install
@@ -37,7 +37,8 @@ cp .env.example .env
 # Add your API keys for weather, location, and music services
 
 # Start development server
-npm run dev
+npm run dev 
+```
 
 📄 License
 
