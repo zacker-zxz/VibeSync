@@ -1,6 +1,7 @@
 "use client"
 
-import { Cloud, Sun, CloudRain } from "lucide-react"
+import { motion } from "framer-motion"
+import { Loader2 } from "lucide-react"
 
 interface WeatherWidgetProps {
   weather: {
@@ -8,27 +9,25 @@ interface WeatherWidgetProps {
     condition: string
     icon: string
   }
+  isLoading: boolean
 }
 
-export function WeatherWidget({ weather }: WeatherWidgetProps) {
-  const getWeatherIcon = () => {
-    switch (weather.condition.toLowerCase()) {
-      case "sunny":
-        return <Sun className="w-4 h-4 text-yellow-400" />
-      case "cloudy":
-        return <Cloud className="w-4 h-4 text-gray-400" />
-      case "rainy":
-        return <CloudRain className="w-4 h-4 text-blue-400" />
-      default:
-        return <Sun className="w-4 h-4 text-yellow-400" />
-    }
-  }
-
+export function WeatherWidget({ weather, isLoading }: WeatherWidgetProps) {
   return (
-    <div className="flex items-center space-x-2 bg-gray-900/50 backdrop-blur-md rounded-lg px-3 py-2 border border-blue-500/20">
-      {getWeatherIcon()}
-      <span className="text-sm text-white">{weather.temp}°F</span>
-      <span className="text-xs text-gray-400">{weather.condition}</span>
-    </div>
+    <motion.div
+      className="flex items-center space-x-2 px-3 py-2 bg-gray-900/50 rounded-lg border border-blue-500/20"
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.2 }}
+    >
+      {isLoading ? (
+        <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+      ) : (
+        <span className="text-lg">{weather.icon}</span>
+      )}
+      <div className="text-sm">
+        <div className="text-blue-300 font-medium">{isLoading ? "Loading..." : `${weather.temp}°C`}</div>
+        <div className="text-gray-400 text-xs">{isLoading ? "Weather" : weather.condition}</div>
+      </div>
+    </motion.div>
   )
 }

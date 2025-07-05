@@ -1,20 +1,32 @@
 "use client"
 
-import { MapPin } from "lucide-react"
+import { motion } from "framer-motion"
+import { MapPin, Loader2 } from "lucide-react"
 
 interface LocationWidgetProps {
   location: {
     city: string
     country: string
   }
+  isLoading: boolean
 }
 
-export function LocationWidget({ location }: LocationWidgetProps) {
+export function LocationWidget({ location, isLoading }: LocationWidgetProps) {
   return (
-    <div className="flex items-center space-x-2 bg-gray-900/50 backdrop-blur-md rounded-lg px-3 py-2 border border-green-500/20">
-      <MapPin className="w-4 h-4 text-green-400" />
-      <span className="text-sm text-white">{location.city}</span>
-      <span className="text-xs text-gray-400">{location.country}</span>
-    </div>
+    <motion.div
+      className="flex items-center space-x-2 px-3 py-2 bg-gray-900/50 rounded-lg border border-green-500/20"
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.2 }}
+    >
+      {isLoading ? (
+        <Loader2 className="w-4 h-4 text-green-400 animate-spin" />
+      ) : (
+        <MapPin className="w-4 h-4 text-green-400" />
+      )}
+      <div className="text-sm">
+        <div className="text-green-300 font-medium">{isLoading ? "Locating..." : location.city}</div>
+        <div className="text-gray-400 text-xs">{isLoading ? "Location" : location.country}</div>
+      </div>
+    </motion.div>
   )
 }

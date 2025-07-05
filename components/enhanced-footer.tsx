@@ -1,141 +1,180 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Music, Instagram, Twitter, Github, Linkedin } from "lucide-react"
+import { Music, Heart, Github, Twitter, Instagram } from "lucide-react"
+import Link from "next/link"
 
 export function EnhancedFooter() {
-  const socialLinks = [
-    { icon: Instagram, href: "#", color: "text-pink-400 hover:text-pink-300" },
-    { icon: Twitter, href: "#", color: "text-blue-400 hover:text-blue-300" },
-    { icon: Github, href: "#", color: "text-purple-400 hover:text-purple-300" },
-    { icon: Linkedin, href: "#", color: "text-cyan-400 hover:text-cyan-300" },
-  ]
-
-  const footerLinks = [
-    { label: "Terms & Conditions", href: "#" },
-    { label: "Privacy Policy", href: "#" },
-    { label: "Support", href: "#" },
-  ]
-
   return (
-    <footer className="py-16 px-6 border-t border-purple-500/20 bg-gray-900/30 backdrop-blur-md">
+    <footer className="relative py-16 px-6 bg-gray-900/30 border-t border-purple-500/20">
       <div className="container mx-auto max-w-6xl">
-        <div className="grid md:grid-cols-3 gap-8 mb-8">
+        <div className="grid md:grid-cols-4 gap-8">
           {/* Brand */}
           <motion.div
-            className="flex flex-col items-center md:items-start"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
+            className="space-y-4"
           >
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                <Music className="w-6 h-6 text-white" />
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                <Music className="w-5 h-5 text-white" />
               </div>
-              <span
-                className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
-                style={{
-                  textShadow: "0 0 20px rgba(236, 72, 153, 0.3)",
-                }}
-              >
+              <span className="text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
                 VibeSync
               </span>
             </div>
-            <p className="text-gray-400 text-center md:text-left max-w-xs">
-              Sync your mood, feel the vibe, hear the world. The future of music discovery.
+            <p className="text-gray-400 leading-relaxed">
+              Sync your mood with the perfect soundtrack. Experience music that adapts to your world.
             </p>
+            <div className="flex items-center space-x-4">
+              <motion.a
+                href="#"
+                className="text-gray-400 hover:text-purple-400 transition-colors"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Twitter className="w-5 h-5" />
+              </motion.a>
+              <motion.a
+                href="#"
+                className="text-gray-400 hover:text-purple-400 transition-colors"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Instagram className="w-5 h-5" />
+              </motion.a>
+              <motion.a
+                href="#"
+                className="text-gray-400 hover:text-purple-400 transition-colors"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Github className="w-5 h-5" />
+              </motion.a>
+            </div>
           </motion.div>
 
-          {/* Links */}
+          {/* Product */}
           <motion.div
-            className="flex flex-col items-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <h3
-              className="text-xl font-bold mb-4 text-white"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
-              }}
-            >
-              Quick Links
-            </h3>
-            <div className="space-y-3">
-              {footerLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="block text-gray-400 hover:text-white transition-colors duration-300 hover:glow"
-                  style={{
-                    transition: "all 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.5)"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.textShadow = "none"
-                  }}
-                >
-                  {link.label}
+            <h3 className="text-lg font-semibold text-white mb-4">Product</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="#features" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Features
+                </Link>
+              </li>
+              <li>
+                <Link href="/app" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Launch App
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  API
                 </a>
-              ))}
-            </div>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Mobile App
+                </a>
+              </li>
+            </ul>
           </motion.div>
 
-          {/* Social Media */}
+          {/* Company */}
           <motion.div
-            className="flex flex-col items-center md:items-end"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3
-              className="text-xl font-bold mb-4 text-white"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
-              }}
-            >
-              Follow Us
-            </h3>
-            <div className="flex space-x-4">
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  className={`p-3 rounded-full bg-gray-800/50 border border-gray-600 ${social.color} transition-all duration-300`}
-                  whileHover={{
-                    scale: 1.1,
-                    boxShadow: "0 0 20px rgba(147, 51, 234, 0.4)",
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <social.icon className="w-5 h-5" />
-                </motion.a>
-              ))}
-            </div>
+            <h3 className="text-lg font-semibold text-white mb-4">Company</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="#contact" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </motion.div>
+
+          {/* Support */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">Support</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Help Center
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  Status
+                </a>
+              </li>
+            </ul>
           </motion.div>
         </div>
 
         {/* Bottom */}
         <motion.div
-          className="text-center pt-8 border-t border-purple-500/20"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
+          className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between"
         >
-          <p
-            className="text-gray-500"
-            style={{
-              textShadow: "0 0 5px rgba(156, 163, 175, 0.2)",
-            }}
-          >
-            &copy; 2024 VibeSync. All rights reserved. Made with 💜 for music lovers worldwide.
+          <p className="text-gray-400 text-sm">
+            © 2024 VibeSync. Made with <Heart className="w-4 h-4 inline text-red-400" /> for music lovers.
           </p>
+          <div className="flex items-center space-x-6 mt-4 md:mt-0">
+            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
+              Privacy
+            </a>
+            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
+              Terms
+            </a>
+            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
+              Cookies
+            </a>
+          </div>
         </motion.div>
       </div>
     </footer>

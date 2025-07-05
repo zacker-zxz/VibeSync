@@ -1,226 +1,226 @@
 "use client"
 
+import type React from "react"
+
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, Volume2, Heart } from "lucide-react"
-import Image from "next/image"
-import { useState } from "react"
-
-interface Track {
-  id: number
-  title: string
-  artist: string
-  album: string
-  duration: string
-  cover: string
-  genre: string
-  mood: string
-}
+import { Card, CardContent } from "@/components/ui/card"
+import { Slider } from "@/components/ui/slider"
+import { Button } from "@/components/ui/button"
+import { dummyTracks, type Track } from "@/data/dummy-music"
+import type { WeatherTheme } from "@/lib/theme-utils"
 
 interface EnhancedMusicPlayerProps {
-  currentTrack: Track
-  isPlaying: boolean
-  onPlayPause: () => void
-  onNext: () => void
-  onPrevious: () => void
+  currentTrack?: Track
+  isPlaying?: boolean
+  onPlayPause?: () => void
+  onNext?: () => void
+  onPrevious?: () => void
+  weatherTheme?: WeatherTheme
+  weatherCondition?: string
 }
 
 export function EnhancedMusicPlayer({
-  currentTrack,
-  isPlaying,
+  currentTrack = dummyTracks[0],
+  isPlaying = false,
   onPlayPause,
   onNext,
   onPrevious,
+  weatherTheme,
+  weatherCondition = "clear",
 }: EnhancedMusicPlayerProps) {
-  const [progress, setProgress] = useState(45)
+  const [progress, setProgress] = useState(0)
   const [volume, setVolume] = useState(75)
+  const [isShuffled, setIsShuffled] = useState(false)
+  const [repeatMode, setRepeatMode] = useState<"off" | "one" | "all">("off")
   const [isLiked, setIsLiked] = useState(false)
-  const [isShuffleOn, setIsShuffleOn] = useState(false)
-  const [isLoopOn, setIsLoopOn] = useState(false)
+
+  // Simulate progress when playing
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          const newProgress = prev + 1
+          return newProgress >= 100 ? 0 : newProgress
+        })
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [isPlaying])
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, "0")}`
+  }
+
+  const currentTime = Math.floor((progress / 100) * (currentTrack.duration || 180))
+  const totalTime = currentTrack.duration || 180
+
+  // Apply weather theme styles
+  const getWeatherStyles = () => {
+    if (!weatherTheme) return {}
+
+    return {
+      "--weather-gradient": weatherTheme.gradient,
+      "--weather-shadow": weatherTheme.shadow,
+      "--weather-accent": weatherTheme.accent.replace("border-", "").replace("/30", ""),
+    } as React.CSSProperties
+  }
 
   return (
     <motion.div
-      className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-8 border border-purple-500/20"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
+      style={getWeatherStyles()}
     >
-      {/* Album Art */}
-      <div className="relative mb-6">
-        <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center relative">
-          <Image
-            src={currentTrack.cover || "/placeholder.svg"}
-            alt={currentTrack.album}
-            width={300}
-            height={300}
-            className="w-full h-full object-cover"
-          />
-          {/* Animated glow effect when playing */}
-          {isPlaying && (
+      <Card
+        className={`bg-gray-900/50 backdrop-blur-md border ${weatherTheme?.accent || "border-purple-500/20"} overflow-hidden`}
+      >
+        <CardContent className="p-6">
+          {/* Album Art */}
+          <div className="relative mb-6">
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-2xl"
-              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              className="w-full aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-purple-600 to-pink-600"
+              animate={isPlaying ? { scale: [1, 1.02, 1] } : {}}
               transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+            >
+              <img
+                src={currentTrack.albumArt || "/placeholder.svg?height=300&width=300"}
+                alt={`${currentTrack.title} album art`}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+
+            {/* Floating particles when playing */}
+            {isPlaying && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className={`absolute w-1 h-1 rounded-full ${weatherTheme ? "bg-current" : "bg-purple-400"}`}
+                    style={{
+                      color: weatherTheme ? `var(--weather-accent)` : undefined,
+                      opacity: 0.6,
+                    }}
+                    initial={{
+                      x: Math.random() * 100 + "%",
+                      y: Math.random() * 100 + "%",
+                    }}
+                    animate={{
+                      x: Math.random() * 100 + "%",
+                      y: Math.random() * 100 + "%",
+                      scale: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: Math.random() * 3 + 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Track Info */}
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-bold text-white mb-1">{currentTrack.title}</h3>
+            <p className="text-gray-400">{currentTrack.artist}</p>
+            <p className="text-sm text-gray-500 mt-1">{currentTrack.album}</p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <Slider
+              value={[progress]}
+              onValueChange={(value) => setProgress(value[0])}
+              max={100}
+              step={1}
+              className="w-full"
             />
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(totalTime)}</span>
+            </div>
+          </div>
+
+          {/* Main Controls */}
+          <div className="flex items-center justify-center space-x-4 mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsShuffled(!isShuffled)}
+              className={`text-gray-400 hover:text-white ${isShuffled ? "text-purple-400" : ""}`}
+            >
+              <Shuffle className="w-4 h-4" />
+            </Button>
+
+            <Button variant="ghost" size="sm" onClick={onPrevious} className="text-gray-400 hover:text-white">
+              <SkipBack className="w-5 h-5" />
+            </Button>
+
+            <Button
+              onClick={onPlayPause}
+              className={`w-12 h-12 rounded-full ${
+                weatherTheme
+                  ? `bg-gradient-to-r ${weatherTheme.primary} hover:opacity-90`
+                  : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              }`}
+              style={weatherTheme ? { boxShadow: weatherTheme.shadow } : {}}
+            >
+              {isPlaying ? <Pause className="w-5 h-5 text-white" /> : <Play className="w-5 h-5 text-white ml-0.5" />}
+            </Button>
+
+            <Button variant="ghost" size="sm" onClick={onNext} className="text-gray-400 hover:text-white">
+              <SkipForward className="w-5 h-5" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setRepeatMode((prev) => (prev === "off" ? "all" : prev === "all" ? "one" : "off"))}
+              className={`text-gray-400 hover:text-white ${repeatMode !== "off" ? "text-purple-400" : ""}`}
+            >
+              <Repeat className="w-4 h-4" />
+              {repeatMode === "one" && <span className="absolute -top-1 -right-1 text-xs">1</span>}
+            </Button>
+          </div>
+
+          {/* Secondary Controls */}
+          <div className="flex items-center justify-between">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsLiked(!isLiked)}
+              className={`${isLiked ? "text-red-400" : "text-gray-400"} hover:text-red-400`}
+            >
+              <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
+            </Button>
+
+            <div className="flex items-center space-x-2 flex-1 max-w-32 ml-4">
+              <Volume2 className="w-4 h-4 text-gray-400" />
+              <Slider
+                value={[volume]}
+                onValueChange={(value) => setVolume(value[0])}
+                max={100}
+                step={1}
+                className="flex-1"
+              />
+            </div>
+          </div>
+
+          {/* Weather-based mood indicator */}
+          {weatherCondition && (
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">Playing music for {weatherCondition} weather</p>
+            </div>
           )}
-        </div>
-        <motion.button
-          className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-md transition-all ${
-            isLiked ? "bg-pink-500/30 text-pink-400" : "bg-black/30 text-gray-400 hover:text-pink-400"
-          }`}
-          onClick={() => setIsLiked(!isLiked)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
-        </motion.button>
-      </div>
-
-      {/* Track Info */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">{currentTrack.title}</h2>
-        <p className="text-purple-400 text-lg">{currentTrack.artist}</p>
-        <p className="text-gray-400">{currentTrack.album}</p>
-        <div className="flex items-center justify-center space-x-4 mt-2">
-          <span className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">{currentTrack.genre}</span>
-          <span className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">{currentTrack.mood}</span>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
-          <span>1:23</span>
-          <span>{currentTrack.duration}</span>
-        </div>
-        <div className="relative">
-          <div className="h-2 bg-gray-700 rounded-full">
-            <motion.div
-              className="h-2 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"
-              style={{ width: `${progress}%` }}
-              animate={
-                isPlaying
-                  ? {
-                      boxShadow: [
-                        "0 0 5px rgba(236, 72, 153, 0.5)",
-                        "0 0 15px rgba(236, 72, 153, 0.8)",
-                        "0 0 5px rgba(236, 72, 153, 0.5)",
-                      ],
-                    }
-                  : {}
-              }
-              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-            />
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={progress}
-            onChange={(e) => setProgress(Number(e.target.value))}
-            className="absolute inset-0 w-full h-2 opacity-0 cursor-pointer"
-          />
-        </div>
-      </div>
-
-      {/* Controls */}
-      <div className="flex items-center justify-center space-x-6 mb-6">
-        <motion.button
-          className={`p-2 transition-all ${isShuffleOn ? "text-purple-400" : "text-gray-400 hover:text-white"}`}
-          onClick={() => setIsShuffleOn(!isShuffleOn)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          animate={
-            isShuffleOn
-              ? {
-                  boxShadow: "0 0 15px rgba(147, 51, 234, 0.6)",
-                  textShadow: "0 0 10px rgba(147, 51, 234, 0.8)",
-                }
-              : {}
-          }
-        >
-          <Shuffle className="w-5 h-5" />
-        </motion.button>
-
-        <motion.button
-          className="p-3 text-white hover:text-purple-400 transition-colors"
-          onClick={onPrevious}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <SkipBack className="w-6 h-6" />
-        </motion.button>
-
-        <motion.button
-          className="p-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white hover:from-pink-400 hover:to-purple-400 transition-all"
-          onClick={onPlayPause}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          animate={
-            isPlaying
-              ? {
-                  boxShadow: [
-                    "0 0 20px rgba(236, 72, 153, 0.5)",
-                    "0 0 30px rgba(236, 72, 153, 0.8)",
-                    "0 0 20px rgba(236, 72, 153, 0.5)",
-                  ],
-                }
-              : {
-                  boxShadow: "0 0 20px rgba(236, 72, 153, 0.5)",
-                }
-          }
-          transition={{ duration: 1.5, repeat: isPlaying ? Number.POSITIVE_INFINITY : 0 }}
-        >
-          {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
-        </motion.button>
-
-        <motion.button
-          className="p-3 text-white hover:text-purple-400 transition-colors"
-          onClick={onNext}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <SkipForward className="w-6 h-6" />
-        </motion.button>
-
-        <motion.button
-          className={`p-2 transition-all ${isLoopOn ? "text-green-400" : "text-gray-400 hover:text-white"}`}
-          onClick={() => setIsLoopOn(!isLoopOn)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          animate={
-            isLoopOn
-              ? {
-                  boxShadow: "0 0 15px rgba(34, 197, 94, 0.6)",
-                  textShadow: "0 0 10px rgba(34, 197, 94, 0.8)",
-                }
-              : {}
-          }
-        >
-          <Repeat className="w-5 h-5" />
-        </motion.button>
-      </div>
-
-      {/* Volume */}
-      <div className="flex items-center space-x-3">
-        <Volume2 className="w-5 h-5 text-gray-400" />
-        <div className="flex-1 relative">
-          <div className="h-1 bg-gray-700 rounded-full">
-            <div
-              className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-300"
-              style={{ width: `${volume}%` }}
-            />
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
-            className="absolute inset-0 w-full h-1 opacity-0 cursor-pointer"
-          />
-        </div>
-        <span className="text-sm text-gray-400 w-8">{volume}</span>
-      </div>
+        </CardContent>
+      </Card>
     </motion.div>
   )
 }

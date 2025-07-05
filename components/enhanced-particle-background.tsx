@@ -8,23 +8,14 @@ interface Particle {
   vx: number
   vy: number
   size: number
-  color: string
   opacity: number
-  glowIntensity: number
+  color: string
 }
 
-interface ParticleBackgroundProps {
-  interactive?: boolean
-  enhanced?: boolean
-}
-
-export function EnhancedParticleBackground({ interactive = false, enhanced = false }: ParticleBackgroundProps) {
+export function EnhancedParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
   const particlesRef = useRef<Particle[]>([])
   const animationRef = useRef<number>()
-  const enhancedModeRef = useRef(false)
-  const enhancedTimeoutRef = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -38,31 +29,19 @@ export function EnhancedParticleBackground({ interactive = false, enhanced = fal
       canvas.height = window.innerHeight
     }
 
-    const colors = [
-      "rgba(236, 72, 153, 0.9)", // pink - brighter
-      "rgba(147, 51, 234, 0.9)", // purple - brighter
-      "rgba(59, 130, 246, 0.9)", // blue - brighter
-      "rgba(34, 197, 94, 0.9)", // green - brighter
-      "rgba(251, 191, 36, 0.8)", // yellow
-      "rgba(239, 68, 68, 0.8)", // red
-    ]
-
     const createParticles = () => {
       const particles: Particle[] = []
-      const particleCount = enhanced
-        ? Math.min(300, Math.floor((canvas.width * canvas.height) / 8000))
-        : Math.min(200, Math.floor((canvas.width * canvas.height) / 10000))
+      const particleCount = Math.min(150, Math.floor((canvas.width * canvas.height) / 15000))
 
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * (enhanced ? 1 : 0.5),
-          vy: (Math.random() - 0.5) * (enhanced ? 1 : 0.5),
-          size: Math.random() * (enhanced ? 5 : 3) + 1,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          opacity: Math.random() * 0.8 + 0.3,
-          glowIntensity: Math.random() * 30 + 20,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.5 + 0.2,
+          color: `hsl(${280 + Math.random() * 40}, 70%, 60%)`,
         })
       }
 
@@ -74,81 +53,37 @@ export function EnhancedParticleBackground({ interactive = false, enhanced = fal
 
       particlesRef.current.forEach((particle, index) => {
         // Update position
-        const speedMultiplier = enhancedModeRef.current ? 2 : 1
-        particle.x += particle.vx * speedMultiplier
-        particle.y += particle.vy * speedMultiplier
+        particle.x += particle.vx
+        particle.y += particle.vy
 
-        // Interactive mouse effect
-        if (interactive) {
-          const dx = mouseRef.current.x - particle.x
-          const dy = mouseRef.current.y - particle.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+        // Bounce off edges
+        if (particle.x <= 0 || particle.x >= canvas.width) particle.vx *= -1
+        if (particle.y <= 0 || particle.y >= canvas.height) particle.vy *= -1
 
-          if (distance < 150) {
-            const force = (150 - distance) / 150
-            const attraction = enhancedModeRef.current ? 0.02 : 0.015
-            particle.vx += (dx / distance) * force * attraction
-            particle.vy += (dy / distance) * force * attraction
+        // Keep particles in bounds
+        particle.x = Math.max(0, Math.min(canvas.width, particle.x))
+        particle.y = Math.max(0, Math.min(canvas.height, particle.y))
 
-            // Increase glow near cursor
-            particle.glowIntensity = Math.min(50, particle.glowIntensity + force * 20)
-          } else {
-            // Restore normal glow
-            particle.glowIntensity = Math.max(20, particle.glowIntensity - 0.5)
-          }
-        }
-
-        // Boundary check with bounce
-        if (particle.x < 0 || particle.x > canvas.width) {
-          particle.vx *= -0.8
-          particle.x = Math.max(0, Math.min(canvas.width, particle.x))
-        }
-        if (particle.y < 0 || particle.y > canvas.height) {
-          particle.vy *= -0.8
-          particle.y = Math.max(0, Math.min(canvas.height, particle.y))
-        }
-
-        // Enhanced mode effects
-        if (enhancedModeRef.current) {
-          particle.opacity = Math.min(1, particle.opacity + 0.02)
-          particle.size = Math.min(8, particle.size + 0.1)
-        } else {
-          particle.opacity = Math.max(0.3, particle.opacity - 0.01)
-          particle.size = Math.max(1, particle.size - 0.05)
-        }
-
-        // Draw particle with enhanced glow
+        // Draw particle
         ctx.save()
         ctx.globalAlpha = particle.opacity
         ctx.fillStyle = particle.color
-        ctx.shadowBlur = particle.glowIntensity
-        ctx.shadowColor = particle.color
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
-
-        // Additional glow layer
-        ctx.shadowBlur = particle.glowIntensity * 1.5
-        ctx.globalAlpha = particle.opacity * 0.3
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2)
-        ctx.fill()
         ctx.restore()
 
-        // Draw connections with enhanced glow
+        // Draw connections
         particlesRef.current.slice(index + 1).forEach((otherParticle) => {
           const dx = particle.x - otherParticle.x
           const dy = particle.y - otherParticle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 120) {
+          if (distance < 100) {
             ctx.save()
-            const connectionOpacity = ((120 - distance) / 120) * 0.4
-            ctx.globalAlpha = connectionOpacity
+            ctx.globalAlpha = (1 - distance / 100) * 0.2
             ctx.strokeStyle = particle.color
-            ctx.lineWidth = enhancedModeRef.current ? 2 : 1
-            ctx.shadowBlur = enhancedModeRef.current ? 10 : 5
-            ctx.shadowColor = particle.color
+            ctx.lineWidth = 0.5
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
@@ -161,58 +96,32 @@ export function EnhancedParticleBackground({ interactive = false, enhanced = fal
       animationRef.current = requestAnimationFrame(animate)
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.x = e.clientX
-      mouseRef.current.y = e.clientY
-    }
+    resizeCanvas()
+    createParticles()
+    animate()
 
     const handleResize = () => {
       resizeCanvas()
       createParticles()
     }
 
-    // Enhanced mode trigger function
-    const triggerEnhancedMode = () => {
-      enhancedModeRef.current = true
-      if (enhancedTimeoutRef.current) {
-        clearTimeout(enhancedTimeoutRef.current)
-      }
-      enhancedTimeoutRef.current = setTimeout(() => {
-        enhancedModeRef.current = false
-      }, 4000)
-    }
-
-    // Expose trigger function globally
-    ;(window as any).triggerParticleEnhancement = triggerEnhancedMode
-
-    resizeCanvas()
-    createParticles()
-    animate()
-
-    if (interactive) {
-      window.addEventListener("mousemove", handleMouseMove)
-    }
     window.addEventListener("resize", handleResize)
 
     return () => {
+      window.removeEventListener("resize", handleResize)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
-      if (interactive) {
-        window.removeEventListener("mousemove", handleMouseMove)
-      }
-      window.removeEventListener("resize", handleResize)
-      if (enhancedTimeoutRef.current) {
-        clearTimeout(enhancedTimeoutRef.current)
-      }
     }
-  }, [interactive, enhanced])
+  }, [])
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ background: "radial-gradient(ellipse at center, rgba(15, 23, 42, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%)" }}
+      style={{
+        background: "radial-gradient(ellipse at center, rgba(15, 15, 15, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%)",
+      }}
     />
   )
 }

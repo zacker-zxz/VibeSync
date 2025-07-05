@@ -1,73 +1,60 @@
 "use client"
-
-import { motion } from "framer-motion"
-import { Headphones, MapPin, Zap, Music } from "lucide-react"
+import { Brain, MapPin, Cloud, Smartphone, Users, Zap } from "lucide-react"
+import { FeatureCard } from "./feature-card"
 
 const features = [
   {
-    icon: <Headphones className="w-8 h-8" />,
-    title: "🎧 Mood-Based Music Recommendations",
-    color: "from-pink-500 to-rose-500",
+    icon: <Brain className="w-8 h-8" />,
+    title: "AI Mood Detection",
+    description:
+      "Advanced algorithms analyze your listening patterns and current context to understand your emotional state.",
+    color: "from-purple-500 to-pink-500",
+    delay: 0,
+  },
+  {
+    icon: <Cloud className="w-8 h-8" />,
+    title: "Weather Integration",
+    description:
+      "Music recommendations that perfectly match the weather outside, creating the ideal atmospheric experience.",
+    color: "from-blue-500 to-cyan-500",
+    delay: 0.1,
   },
   {
     icon: <MapPin className="w-8 h-8" />,
-    title: "📍 Location & Weather Synced Playlists",
-    color: "from-purple-500 to-indigo-500",
+    title: "Location Awareness",
+    description:
+      "Discover local music trends and artists in your area while exploring new sounds from around the world.",
+    color: "from-green-500 to-emerald-500",
+    delay: 0.2,
+  },
+  {
+    icon: <Smartphone className="w-8 h-8" />,
+    title: "Cross-Platform Sync",
+    description: "Seamlessly sync your music experience across all devices with real-time updates and preferences.",
+    color: "from-orange-500 to-red-500",
+    delay: 0.3,
+  },
+  {
+    icon: <Users className="w-8 h-8" />,
+    title: "Social Discovery",
+    description: "Connect with friends and discover what they're listening to, share playlists, and explore together.",
+    color: "from-indigo-500 to-purple-500",
+    delay: 0.4,
   },
   {
     icon: <Zap className="w-8 h-8" />,
-    title: "🎵 Real-time Vibe Matching Engine",
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: <Music className="w-8 h-8" />,
-    title: "💽 Powered by Spotify & Apple Music APIs",
-    color: "from-green-500 to-emerald-500",
+    title: "Instant Adaptation",
+    description: "Real-time music adaptation based on your activity, time of day, and environmental factors.",
+    color: "from-yellow-500 to-orange-500",
+    delay: 0.5,
   },
 ]
 
 export function SimpleFeatures() {
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {features.map((feature, index) => (
-        <motion.div
-          key={index}
-          className="group relative"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: index * 0.1 }}
-          viewport={{ once: true }}
-          whileHover={{ y: -10, scale: 1.02 }}
-        >
-          <div className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-6 border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 h-full text-center">
-            {/* Glow effect */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-500`}
-            />
-
-            {/* Icon */}
-            <div
-              className={`w-16 h-16 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}
-            >
-              <div className="text-white">{feature.icon}</div>
-            </div>
-
-            {/* Title */}
-            <h3
-              className="text-lg font-bold text-white"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
-              }}
-            >
-              {feature.title}
-            </h3>
-
-            {/* Hover glow border */}
-            <div
-              className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500 -z-10`}
-            />
-          </div>
-        </motion.div>
+        <FeatureCard key={index} {...feature} />
       ))}
     </div>
   )

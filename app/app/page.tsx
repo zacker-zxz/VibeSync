@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { MapPin, Cloud, Thermometer, Search } from "lucide-react"
 import Link from "next/link"
@@ -13,16 +13,103 @@ import { FixedSidebar } from "@/components/fixed-sidebar"
 import { LocationMap } from "@/components/location-map"
 import { EnhancedMusicPlayer } from "@/components/enhanced-music-player"
 import { dummyTracks, searchTracks, type Track } from "@/data/dummy-music"
+import { getUserLocation } from "@/lib/location-service"
+import { getWeatherData } from "@/lib/weather-service"
+import { getWeatherTheme, type WeatherTheme } from "@/lib/theme-utils"
 
 export default function AppPage() {
-  const [currentTrack, setCurrentTrack] = useState(dummyTracks[0])
+  const [currentTrack, setCurrentTrack] = useState<Track>(dummyTracks[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentMood, setCurrentMood] = useState("Energetic")
-  const [weather, setWeather] = useState({ temp: 72, condition: "Sunny", icon: "☀️" })
-  const [location, setLocation] = useState({ city: "San Francisco", country: "US" })
+
+  // Location and Weather State
+  const [location, setLocation] = useState({ city: "Loading...", country: "..." })
+  const [weather, setWeather] = useState({ temp: 0, condition: "Loading...", icon: "" })
+  const [isLocationLoading, setIsLocationLoading] = useState(true)
+  const [isWeatherLoading, setIsWeatherLoading] = useState(true)
+  const [weatherTheme, setWeatherTheme] = useState<WeatherTheme>()
 
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<Track[]>([])
+
+  // Fetch location and weather data on component mount
+  useEffect(() => {
+    const fetchLocationAndWeather = async () => {
+      try {
+        console.log("Starting location detection...")
+
+        // Fetch user location
+        const locationData = await getUserLocation()
+        console.log("Location data received:", locationData)
+
+        if (locationData) {
+          setLocation({
+            city: locationData.city,
+            country: locationData.country,
+          })
+          setIsLocationLoading(false)
+
+          console.log("Fetching weather for coordinates:", locationData.latitude, locationData.longitude)
+
+          // Fetch weather data using the location coordinates
+          const weatherData = await getWeatherData(locationData.latitude, locationData.longitude)
+          console.log("Weather data received:", weatherData)
+
+          if (weatherData) {
+            setWeather({
+              temp: weatherData.temp,
+              condition: weatherData.condition,
+              icon: weatherData.icon,
+            })
+
+            // Set weather theme based on weather data
+            const theme = getWeatherTheme(weatherData.condition, weatherData.temp)
+            setWeatherTheme(theme)
+          } else {
+            console.warn("No weather data received, using fallback")
+            const fallbackWeather = {
+              temp: 22,
+              condition: "Pleasant",
+              icon: "🌤️",
+            }
+            setWeather(fallbackWeather)
+            setWeatherTheme(getWeatherTheme(fallbackWeather.condition, fallbackWeather.temp))
+          }
+        } else {
+          console.warn("No location data received, using fallback")
+          setLocation({
+            city: "Location Unavailable",
+            country: "--",
+          })
+          const fallbackWeather = {
+            temp: 22,
+            condition: "Pleasant",
+            icon: "🌤️",
+          }
+          setWeather(fallbackWeather)
+          setWeatherTheme(getWeatherTheme(fallbackWeather.condition, fallbackWeather.temp))
+        }
+      } catch (error) {
+        console.error("Error in fetchLocationAndWeather:", error)
+        setLocation({
+          city: "Location Unavailable",
+          country: "--",
+        })
+        const fallbackWeather = {
+          temp: 22,
+          condition: "Pleasant",
+          icon: "🌤️",
+        }
+        setWeather(fallbackWeather)
+        setWeatherTheme(getWeatherTheme(fallbackWeather.condition, fallbackWeather.temp))
+      } finally {
+        setIsLocationLoading(false)
+        setIsWeatherLoading(false)
+      }
+    }
+
+    fetchLocationAndWeather()
+  }, [])
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
@@ -31,6 +118,22 @@ export default function AppPage() {
     } else {
       setSearchResults([])
     }
+  }
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying)
+  }
+
+  const handleNext = () => {
+    const currentIndex = dummyTracks.findIndex((track) => track.id === currentTrack.id)
+    const nextIndex = (currentIndex + 1) % dummyTracks.length
+    setCurrentTrack(dummyTracks[nextIndex])
+  }
+
+  const handlePrevious = () => {
+    const currentIndex = dummyTracks.findIndex((track) => track.id === currentTrack.id)
+    const prevIndex = currentIndex === 0 ? dummyTracks.length - 1 : currentIndex - 1
+    setCurrentTrack(dummyTracks[prevIndex])
   }
 
   return (
@@ -66,8 +169,8 @@ export default function AppPage() {
                 <Search className="w-4 h-4 text-gray-400" />
               </div>
             </div>
-            <WeatherWidget weather={weather} />
-            <LocationWidget location={location} />
+            <WeatherWidget weather={weather} isLoading={isWeatherLoading} />
+            <LocationWidget location={location} isLoading={isLocationLoading} />
           </div>
         </div>
       </header>
@@ -81,7 +184,7 @@ export default function AppPage() {
           {/* Left Column - Current Status */}
           <div className="space-y-6">
             <motion.div
-              className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-6 border border-purple-500/20"
+              className={`bg-gray-900/50 backdrop-blur-md rounded-2xl p-6 border ${weatherTheme?.accent || "border-purple-500/20"}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -98,7 +201,7 @@ export default function AppPage() {
             </motion.div>
 
             <motion.div
-              className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-6 border border-blue-500/20"
+              className={`bg-gray-900/50 backdrop-blur-md rounded-2xl p-6 border ${weatherTheme?.accent || "border-blue-500/20"}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -117,21 +220,21 @@ export default function AppPage() {
                     <Cloud className="w-5 h-5 text-blue-400" />
                     <span>Weather</span>
                   </div>
-                  <span className="text-blue-300">{weather.condition}</span>
+                  <span className="text-blue-300">{isWeatherLoading ? "Loading..." : weather.condition}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Thermometer className="w-5 h-5 text-orange-400" />
                     <span>Temperature</span>
                   </div>
-                  <span className="text-orange-300">{weather.temp}°F</span>
+                  <span className="text-orange-300">{isWeatherLoading ? "..." : `${weather.temp}°C`}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <MapPin className="w-5 h-5 text-green-400" />
                     <span>Location</span>
                   </div>
-                  <span className="text-green-300">{location.city}</span>
+                  <span className="text-green-300">{isLocationLoading ? "Loading..." : location.city}</span>
                 </div>
               </div>
             </motion.div>
@@ -142,17 +245,11 @@ export default function AppPage() {
             <EnhancedMusicPlayer
               currentTrack={currentTrack}
               isPlaying={isPlaying}
-              onPlayPause={() => setIsPlaying(!isPlaying)}
-              onNext={() => {
-                const currentIndex = dummyTracks.findIndex((track) => track.id === currentTrack.id)
-                const nextIndex = (currentIndex + 1) % dummyTracks.length
-                setCurrentTrack(dummyTracks[nextIndex])
-              }}
-              onPrevious={() => {
-                const currentIndex = dummyTracks.findIndex((track) => track.id === currentTrack.id)
-                const prevIndex = currentIndex === 0 ? dummyTracks.length - 1 : currentIndex - 1
-                setCurrentTrack(dummyTracks[prevIndex])
-              }}
+              onPlayPause={handlePlayPause}
+              onNext={handleNext}
+              onPrevious={handlePrevious}
+              weatherTheme={weatherTheme}
+              weatherCondition={weather.condition}
             />
           </div>
 

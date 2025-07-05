@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Settings, Heart, LogOut, X, Save, Palette } from "lucide-react"
+import { Settings, Heart, X, Save, Palette, Home, Music, TrendingUp, User } from "lucide-react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 interface UserSettings {
   name: string
@@ -16,6 +17,15 @@ interface UserSettings {
 }
 
 const genres = ["Pop", "Rock", "Hip-Hop", "Electronic", "Jazz", "Classical", "R&B", "Country", "Indie", "Alternative"]
+
+const sidebarItems = [
+  { icon: Home, label: "Home", href: "/" },
+  { icon: Music, label: "Discover", href: "/app" },
+  { icon: Heart, label: "Favorites", href: "/favorites" },
+  { icon: TrendingUp, label: "Trending", href: "/trending" },
+  { icon: User, label: "Profile", href: "/profile" },
+  { icon: Settings, label: "Settings", href: "/settings" },
+]
 
 export function FixedSidebar() {
   const router = useRouter()
@@ -63,49 +73,60 @@ export function FixedSidebar() {
     }))
   }
 
-  const sidebarItems = [
-    { id: "settings", icon: Settings, label: "Settings", color: "text-purple-400" },
-    { id: "liked", icon: Heart, label: "Liked", color: "text-pink-400" },
-    { id: "personalization", icon: Palette, label: "Style", color: "text-blue-400" },
-  ]
-
   return (
     <>
       {/* Fixed Sidebar */}
-      <div className="fixed left-0 top-20 h-full w-20 bg-gray-900/80 backdrop-blur-md border-r border-purple-500/30 flex flex-col items-center py-8 space-y-6 z-40">
-        {sidebarItems.map((item) => (
-          <motion.button
-            key={item.id}
-            onClick={() => setActiveTab(activeTab === item.id ? null : item.id)}
-            className={`p-3 rounded-xl transition-all duration-300 ${
-              activeTab === item.id
-                ? "bg-purple-500/30 border border-purple-400"
-                : "bg-gray-800/30 hover:bg-gray-700/50 border border-gray-600"
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{
-              boxShadow: activeTab === item.id ? "0 0 20px rgba(147, 51, 234, 0.5)" : "none",
-            }}
-          >
-            <item.icon className={`w-6 h-6 ${item.color}`} />
-          </motion.button>
-        ))}
-
-        <div className="flex-1" />
-
-        <motion.button
-          onClick={handleLogout}
-          className="p-3 rounded-xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 transition-all"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          style={{
-            boxShadow: "0 0 15px rgba(239, 68, 68, 0.4)",
-          }}
+      <motion.div
+        className="fixed left-0 top-0 h-full w-20 bg-gray-900/50 backdrop-blur-md border-r border-purple-500/20 z-40 flex flex-col items-center py-6"
+        initial={{ x: -80 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* Logo */}
+        <motion.div
+          className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-8"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <LogOut className="w-6 h-6 text-red-400" />
-        </motion.button>
-      </div>
+          <span className="text-white font-bold text-lg">V</span>
+        </motion.div>
+
+        {/* Navigation Items */}
+        <nav className="flex-1 flex flex-col space-y-4">
+          {sidebarItems.map((item, index) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+            >
+              <Link href={item.href}>
+                <motion.button
+                  className="w-12 h-12 rounded-xl bg-gray-800/50 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:border-purple-500/30 hover:bg-purple-500/10 transition-all duration-300 group"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  title={item.label}
+                >
+                  <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </motion.button>
+              </Link>
+            </motion.div>
+          ))}
+        </nav>
+
+        {/* Bottom Indicator */}
+        <motion.div
+          className="w-8 h-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"
+          animate={{
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+        />
+      </motion.div>
 
       {/* Expandable Panel */}
       <AnimatePresence>
@@ -131,7 +152,7 @@ export function FixedSidebar() {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-purple-500/20">
                 <h2 className="text-xl font-bold text-white">
-                  {sidebarItems.find((item) => item.id === activeTab)?.label}
+                  {sidebarItems.find((item) => item.label === activeTab)?.label}
                 </h2>
                 <button
                   onClick={() => setActiveTab(null)}
@@ -143,7 +164,7 @@ export function FixedSidebar() {
 
               {/* Content */}
               <div className="p-6">
-                {activeTab === "settings" && (
+                {activeTab === "Settings" && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
@@ -222,7 +243,7 @@ export function FixedSidebar() {
                   </motion.div>
                 )}
 
-                {activeTab === "liked" && (
+                {activeTab === "Favorites" && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                     <h3 className="text-lg font-semibold text-white mb-4">Liked Songs ({likedSongs.length})</h3>
                     {likedSongs.map((song) => (
@@ -242,7 +263,7 @@ export function FixedSidebar() {
                   </motion.div>
                 )}
 
-                {activeTab === "personalization" && (
+                {activeTab === "Profile" && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div>

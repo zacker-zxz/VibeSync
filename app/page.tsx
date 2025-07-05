@@ -1,188 +1,191 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Music } from "lucide-react"
 import Link from "next/link"
+import { Play, Music, MapPin, Cloud, Users, Sparkles, ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { EnhancedParticleBackground } from "@/components/enhanced-particle-background"
-import { EnhancedGlowButton } from "@/components/enhanced-glow-button"
-import { TestimonialCard } from "@/components/testimonial-card"
 import { SimpleFeatures } from "@/components/simple-features"
+import { TestimonialCard } from "@/components/testimonial-card"
 import { EnhancedFooter } from "@/components/enhanced-footer"
+import { LoadingScreen } from "@/components/loading-screen"
+import { TTSButton } from "@/components/tts-button"
 
 export default function HomePage() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
+  const [showLoading, setShowLoading] = useState(false)
+
+  const handleGetStarted = () => {
+    setShowLoading(true)
+  }
+
+  const handleLoadingComplete = () => {
+    setShowLoading(false)
   }
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      <EnhancedParticleBackground interactive enhanced />
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
+      <EnhancedParticleBackground />
+
+      {/* Loading Screen */}
+      <LoadingScreen isVisible={showLoading} onComplete={handleLoadingComplete} />
+
+      {/* TTS Button - Only on homepage */}
+      <TTSButton />
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-purple-500/20">
+      <nav className="fixed top-0 w-full z-40 bg-black/20 backdrop-blur-md border-b border-purple-500/20">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <motion.div
-            className="flex items-center space-x-2 cursor-pointer"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            onClick={() => {
-              if (typeof window !== "undefined" && (window as any).triggerParticleEnhancement) {
-                ;(window as any).triggerParticleEnhancement()
-              }
-            }}
-          >
+          <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
+              <span className="text-white font-bold">V</span>
             </div>
             <span
-              className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
+              className="text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
               style={{
                 textShadow: "0 0 20px rgba(236, 72, 153, 0.3)",
               }}
             >
               VibeSync
             </span>
-          </motion.div>
-
-          <motion.div
-            className="hidden md:flex space-x-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <button
-              onClick={scrollToTop}
-              className="hover:text-pink-400 transition-colors"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
-              }}
-            >
-              Home
-            </button>
-            <a
-              href="#features"
-              className="hover:text-pink-400 transition-colors"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
-              }}
-            >
+          </div>
+          <div className="hidden md:flex items-center space-x-8">
+            <a href="#features" className="text-gray-300 hover:text-white transition-colors">
               Features
             </a>
-            <a
-              href="#testimonials"
-              className="hover:text-purple-400 transition-colors"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
-              }}
-            >
-              Reviews
+            <a href="#testimonials" className="text-gray-300 hover:text-white transition-colors">
+              Testimonials
             </a>
-            <a
-              href="#contact"
-              className="hover:text-blue-400 transition-colors"
-              style={{
-                textShadow: "0 0 10px rgba(255, 255, 255, 0.2)",
-              }}
-            >
+            <a href="#contact" className="text-gray-300 hover:text-white transition-colors">
               Contact
             </a>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+          </div>
+          <Button
+            onClick={handleGetStarted}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-2 rounded-full transition-all duration-300"
+            style={{
+              boxShadow: "0 0 20px rgba(147, 51, 234, 0.3)",
+            }}
           >
-            <Link href="/app">
-              <EnhancedGlowButton>Launch App</EnhancedGlowButton>
-            </Link>
-          </motion.div>
+            Launch App
+          </Button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="text-center max-w-4xl mx-auto">
-          <motion.h1
-            className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent glow-heading hero-pulse"
-            initial={{ opacity: 0, y: 50 }}
+      <section className="relative min-h-screen flex items-center justify-center pt-20">
+        <div className="container mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            style={{
-              textShadow:
-                "0 0 40px rgba(236, 72, 153, 0.8), 0 0 80px rgba(147, 51, 234, 0.6), 0 0 120px rgba(59, 130, 246, 0.4)",
-              filter: "drop-shadow(0 0 20px rgba(236, 72, 153, 0.5))",
-            }}
+            className="max-w-4xl mx-auto"
           >
-            Sync Your Mood.
-            <br />
-            Feel the Vibe.
-            <br />
-            Hear the World.
-          </motion.h1>
-
-          <motion.p
-            className="text-xl md:text-2xl mb-12 text-gray-300 max-w-2xl mx-auto glow-text"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            style={{
-              textShadow: "0 0 20px rgba(209, 213, 219, 0.6), 0 0 40px rgba(147, 51, 234, 0.3)",
-            }}
-          >
-            Experience music like never before. VibeSync creates personalized playlists based on your mood, weather, and
-            location for the perfect sonic journey.
-          </motion.p>
-
-          <motion.div
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <Link href="/app">
-              <EnhancedGlowButton size="lg" className="text-xl px-12 py-4">
-                Get Started
-              </EnhancedGlowButton>
-            </Link>
-            <button
-              className="text-lg text-gray-300 hover:text-white transition-colors border-b border-transparent hover:border-purple-400"
+            <h1
+              className="text-5xl md:text-7xl font-bold mb-8 leading-tight"
               style={{
-                textShadow: "0 0 10px rgba(209, 213, 219, 0.2)",
+                background: "linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                textShadow: "0 0 40px rgba(236, 72, 153, 0.3)",
+                lineHeight: "1.1",
               }}
             >
-              Watch Demo
-            </button>
+              VibeSync
+            </h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed"
+              style={{ marginTop: "2rem" }}
+            >
+              Discover music that matches your mood, location, and the world around you.
+              <br />
+              Let AI curate the perfect soundtrack for every moment of your life.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
+            >
+              <Button
+                onClick={handleGetStarted}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 flex items-center space-x-2"
+                style={{
+                  boxShadow: "0 0 30px rgba(147, 51, 234, 0.4)",
+                }}
+              >
+                <Play className="w-5 h-5" />
+                <span>Get Started</span>
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+
+              <Link href="/app">
+                <Button
+                  variant="outline"
+                  className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 bg-transparent"
+                >
+                  Explore Demo
+                </Button>
+              </Link>
+            </motion.div>
           </motion.div>
+
+          {/* Floating Music Icons */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[Music, MapPin, Cloud, Users, Sparkles].map((Icon, index) => (
+              <motion.div
+                key={index}
+                className="absolute"
+                style={{
+                  left: `${20 + index * 15}%`,
+                  top: `${30 + (index % 2) * 40}%`,
+                }}
+                animate={{
+                  y: [0, -20, 0],
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  duration: 4 + index,
+                  repeat: Number.POSITIVE_INFINITY,
+                  delay: index * 0.5,
+                }}
+              >
+                <Icon className="w-8 h-8 text-purple-400/30" />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
+      <section id="features" className="py-20 relative">
+        <div className="container mx-auto px-6">
           <motion.div
-            className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="text-center mb-16"
           >
             <h2
-              className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent"
+              className="text-4xl md:text-5xl font-bold mb-6"
               style={{
-                textShadow: "0 0 20px rgba(34, 197, 94, 0.3)",
+                background: "linear-gradient(135deg, #ec4899, #8b5cf6)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
               }}
             >
-              Revolutionary Features
+              Intelligent Music Discovery
             </h2>
-            <p
-              className="text-xl text-gray-300 max-w-2xl mx-auto"
-              style={{
-                textShadow: "0 0 10px rgba(209, 213, 219, 0.2)",
-              }}
-            >
-              Discover how VibeSync revolutionizes your music experience with cutting-edge technology
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Experience the future of music recommendation with our AI-powered platform that understands your mood,
+              environment, and preferences.
             </p>
           </motion.div>
 
@@ -191,149 +194,189 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
+      <section id="testimonials" className="py-20 relative">
+        <div className="container mx-auto px-6">
           <motion.div
-            className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="text-center mb-16"
           >
             <h2
-              className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent glow-heading"
+              className="text-4xl md:text-5xl font-bold mb-6"
               style={{
-                textShadow: "0 0 30px rgba(34, 197, 94, 0.6), 0 0 60px rgba(59, 130, 246, 0.4)",
-                filter: "drop-shadow(0 0 15px rgba(34, 197, 94, 0.4))",
+                background: "linear-gradient(135deg, #06b6d4, #8b5cf6)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
               }}
             >
-              What Users Say
+              What Our Users Say
             </h2>
-            <p
-              className="text-xl text-gray-300 max-w-2xl mx-auto"
-              style={{
-                textShadow: "0 0 10px rgba(209, 213, 219, 0.2)",
-              }}
-            >
-              Join thousands of music lovers who've transformed their listening experience
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Join thousands of music lovers who have transformed their listening experience
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <TestimonialCard
               name="Sarah Chen"
               role="Music Producer"
-              content="VibeSync completely changed how I discover music. The mood-based recommendations are incredibly accurate!"
-              rating={5}
-              delay={0}
+              content="VibeSync has completely changed how I discover new music. The mood-based recommendations are incredibly accurate!"
+              avatar="/placeholder.svg?height=60&width=60"
             />
             <TestimonialCard
               name="Marcus Johnson"
               role="DJ & Artist"
-              content="The weather sync feature is genius. My playlists now perfectly match the atmosphere of every gig."
-              rating={5}
-              delay={0.1}
+              content="The location-based features help me find local talent and understand regional music trends. It's a game-changer!"
+              avatar="/placeholder.svg?height=60&width=60"
             />
             <TestimonialCard
               name="Elena Rodriguez"
               role="Music Enthusiast"
-              content="I've discovered so many amazing artists through VibeSync's location-based recommendations. It's like having a personal music curator."
-              rating={5}
-              delay={0.2}
+              content="I love how it adapts to the weather and time of day. It's like having a personal DJ who knows exactly what I need."
+              avatar="/placeholder.svg?height=60&width=60"
             />
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-6">
-        <div className="container mx-auto max-w-4xl">
+      <section id="contact" className="py-20 relative">
+        <div className="container mx-auto px-6">
           <motion.div
-            className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
           >
-            <h2
-              className="text-5xl font-bold mb-6 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
-              style={{
-                textShadow: "0 0 20px rgba(236, 72, 153, 0.3)",
-              }}
-            >
-              Get In Touch
-            </h2>
-            <p
-              className="text-xl text-gray-300 max-w-2xl mx-auto"
-              style={{
-                textShadow: "0 0 10px rgba(209, 213, 219, 0.2)",
-              }}
-            >
-              Have questions or feedback? We'd love to hear from you.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-8 border border-purple-500/20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3
-                  className="text-2xl font-bold mb-4 text-purple-400"
+            {/* Floating Particles Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {[...Array(15)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-purple-400/30 rounded-full"
                   style={{
-                    textShadow: "0 0 15px rgba(147, 51, 234, 0.4)",
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
                   }}
-                >
-                  Contact Info
-                </h3>
-                <div className="space-y-4">
-                  <p className="flex items-center space-x-3">
-                    <span className="text-pink-400">📧</span>
-                    <span>hello@vibesync.com</span>
-                  </p>
-                  <p className="flex items-center space-x-3">
-                    <span className="text-blue-400">🌐</span>
-                    <span>www.vibesync.com</span>
-                  </p>
-                  <p className="flex items-center space-x-3">
-                    <span className="text-green-400">📱</span>
-                    <span>+1 (555) 123-VIBE</span>
-                  </p>
-                </div>
-              </div>
-              <div>
-                <h3
-                  className="text-2xl font-bold mb-4 text-purple-400"
-                  style={{
-                    textShadow: "0 0 15px rgba(147, 51, 234, 0.4)",
+                  animate={{
+                    x: [0, Math.random() * 100 - 50],
+                    y: [0, Math.random() * 100 - 50],
+                    opacity: [0.3, 0.8, 0.3],
                   }}
-                >
-                  Quick Message
-                </h3>
-                <div className="space-y-4">
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="w-full px-4 py-3 bg-black/50 border border-purple-500/30 rounded-lg focus:border-purple-400 focus:outline-none"
-                  />
-                  <textarea
-                    placeholder="Your message"
-                    rows={4}
-                    className="w-full px-4 py-3 bg-black/50 border border-purple-500/30 rounded-lg focus:border-purple-400 focus:outline-none resize-none"
-                  />
-                  <EnhancedGlowButton className="w-full">Send Message</EnhancedGlowButton>
-                </div>
-              </div>
+                  transition={{
+                    duration: Math.random() * 5 + 3,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "reverse",
+                  }}
+                />
+              ))}
             </div>
+
+            <Card className="bg-gray-900/50 backdrop-blur-md border border-purple-500/20 relative overflow-hidden">
+              {/* Animated Background Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-pink-600/10 to-blue-600/10 animate-pulse" />
+
+              <CardContent className="p-8 relative z-10">
+                <div className="text-center mb-8">
+                  <motion.h2
+                    className="text-3xl md:text-4xl font-bold mb-4"
+                    style={{
+                      background: "linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                    animate={{
+                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Number.POSITIVE_INFINITY,
+                    }}
+                  >
+                    Get in Touch
+                  </motion.h2>
+                  <p className="text-gray-400 text-lg">Ready to revolutionize your music experience? Let's connect!</p>
+                </div>
+
+                <form className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-purple-500/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
+                        placeholder="Your name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                      <input
+                        type="email"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-purple-500/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
+                    <textarea
+                      rows={4}
+                      className="w-full px-4 py-3 bg-gray-800/50 border border-purple-500/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                      placeholder="Tell us about your music preferences and how we can help..."
+                    />
+                  </div>
+
+                  <div className="text-center">
+                    <motion.button
+                      type="submit"
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 flex items-center space-x-2 mx-auto"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{
+                        boxShadow: "0 0 25px rgba(147, 51, 234, 0.4)",
+                      }}
+                    >
+                      <span>Send Message</span>
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                      >
+                        <ArrowRight className="w-4 h-4" />
+                      </motion.div>
+                    </motion.button>
+                  </div>
+                </form>
+
+                {/* Pulsing Icons */}
+                <div className="flex justify-center space-x-8 mt-8">
+                  {[Music, MapPin, Cloud].map((Icon, index) => (
+                    <motion.div
+                      key={index}
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.5, 1, 0.5],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Number.POSITIVE_INFINITY,
+                        delay: index * 0.5,
+                      }}
+                    >
+                      <Icon className="w-6 h-6 text-purple-400" />
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </section>
 
-      {/* Enhanced Footer */}
+      {/* Footer */}
       <EnhancedFooter />
     </div>
   )
