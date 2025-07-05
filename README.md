@@ -22,7 +22,7 @@ A smart music recommendation application that curates personalized playlists bas
 - Matches musical genres and tempos to weather patterns
 - Considers seasonal preferences and atmospheric conditions
 
-![Screenshot2025-07-05045720](./lib/Screenshot2025-07-05045620.png)
+![Screenshot2025-07-05045720](./lib/Screenshot2025-07-05045720.png)
 ![Screenshot2025-07-05045628](./lib/Screenshot2025-07-05045628.png)
 
 
