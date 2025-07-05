@@ -1,34 +1,49 @@
 # VibeSync
 # 🎵 Context-Aware Music Recommendation System
 
-Overview
+## Overview
 
-Basic Protoype hosted on Vercel - https://vibe-sync-coral.vercel.app/
+Live Demo: [https://vibe-sync-coral.vercel.app/](https://vibe-sync-coral.vercel.app/)
 
-A smart music recommendation application that curates personalized playlists based on your travel destination, current mood, and real-time weather conditions. This innovative system combines multiple contextual factors to deliver the perfect soundtrack for any moment.
+VibeSync is a next-generation music recommendation platform that curates personalized playlists based on your **location**, **mood**, and **real-time weather**. It creatively adapts its visual and audio experience using data from public APIs and offers a seamless, interactive user journey.
 
-🌟 Key Features
+---
 
-🌍 Location-Based Recommendations
-- Recommends music that matches your travel destination's culture and vibe
-- Suggests popular tracks from the region you're visiting
-- Incorporates local musical traditions and trending genres
+## 🌟 Key Features
 
-🎭 Mood-Based Curation
-- Analyzes user-selected mood states
-- Dynamically adjusts music selection based on emotional context
-- Supports mood transitions throughout the day
+### 🌍 Location-Based Recommendations
+- Suggests music that matches your current city or travel destination
+- Highlights trending tracks and local artists using geolocation
 
-🌤️ Weather-Responsive Music
-- Fetches current weather conditions in real-time
-- Matches musical genres and tempos to weather patterns
-- Considers seasonal preferences and atmospheric conditions
+### 🎭 Mood-Based Curation
+- Lets users select or adjust their mood
+- Dynamically adapts playlists to emotional context and mood transitions
+
+### 🌤️ Weather-Responsive Music & Visuals
+- Fetches live weather data via the **OpenWeather API**
+- Creatively adjusts the website's visual theme in real time based on weather (colors, gradients, effects)
+- Matches musical genres and tempos to current weather and season
+
+### 🌀 Custom Creative Loading States
+- Features a unique, animated loading screen that keeps users engaged while waiting for API responses (location, weather, Spotify)
+- Step-by-step progress indicators for a delightful onboarding and data-fetching experience
+
+### 🗣️ Text-to-Speech (TTS) Integration
+- Uses the **Web Speech API** to read out page content
+- Accessible TTS button for hands-free listening to app features and descriptions
+
+### 🎧 Spotify API Integration
+- Suggests songs and playlists using the **Spotify API**
+- Real-time music search and recommendations based on user context
+
+---
 
 ![Screenshot2025-07-05045720](./lib/Screenshot2025-07-05045720.png)
 ![Screenshot2025-07-05045628](./lib/Screenshot2025-07-05045628.png)
 
+---
 
-🛠️ Installation & Setup
+## 🛠️ Installation & Setup
 
 ```bash
 # Clone the repository
@@ -40,21 +55,21 @@ npm install
 
 # Set up environment variables
 cp .env.example .env
-# Add your API keys for weather, location, and music services
+# Add your API keys for OpenWeather, Spotify, and any other services
 
 # Start development server
-npm run dev 
+npm run dev
 ```
 
-📄 License
+---
+
+## 📄 License
 
 This project is licensed under the MIT License.
 
-📞 Support & Contact
+## 📞 Support & Contact
 
 - Issues: Please report bugs via GitHub Issues
-- gmail - tejastayade4@gmail.com
-          aryan201107@gmail.com
+- Email: tejastayade4@gmail.com, aryan201107@gmail.com
 
-
-*Creating the perfect soundtrack for every moment, wherever you are. 🎵*
+*Creating the perfect soundtrack for every moment, wherever you
