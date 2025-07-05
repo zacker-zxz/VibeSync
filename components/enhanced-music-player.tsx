@@ -36,19 +36,21 @@ export function EnhancedMusicPlayer({
   const [repeatMode, setRepeatMode] = useState<"off" | "one" | "all">("off")
   const [isLiked, setIsLiked] = useState(false)
 
+  const duration = Number(currentTrack.duration) || 180
+
   // Simulate progress when playing
   useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setProgress((prev) => {
-          const newProgress = prev + 1
-          return newProgress >= 100 ? 0 : newProgress
-        })
-      }, 1000)
-    }
-    return () => clearInterval(interval)
-  }, [isPlaying])
+  let interval: NodeJS.Timeout
+  if (isPlaying) {
+    interval = setInterval(() => {
+      setProgress((prev) => {
+        const newProgress = prev + 1
+        return newProgress >= duration ? 0 : newProgress
+      })
+    }, 1000)
+  }
+  return () => clearInterval(interval)
+}, [isPlaying, duration])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -56,9 +58,8 @@ export function EnhancedMusicPlayer({
     return `${mins}:${secs.toString().padStart(2, "0")}`
   }
 
-  const duration = Number(currentTrack.duration) || 180
-  const currentTime = Math.floor((progress / 100) * duration)
-  const totalTime = duration
+  const currentTime = progress
+const totalTime = duration
 
   // Apply weather theme styles
   const getWeatherStyles = () => {
@@ -137,12 +138,12 @@ export function EnhancedMusicPlayer({
           {/* Progress Bar */}
           <div className="mb-4">
             <Slider
-              value={[progress]}
-              onValueChange={(value) => setProgress(value[0])}
-              max={100}
-              step={1}
-              className="w-full"
-            />
+  value={[progress]}
+  onValueChange={(value) => setProgress(value[0])}
+  max={duration}
+  step={1}
+  className="w-full"
+/>
             <div className="flex justify-between text-xs text-gray-400 mt-1">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(totalTime)}</span>
