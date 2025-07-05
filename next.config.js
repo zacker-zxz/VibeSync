@@ -3,8 +3,15 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['localhost'],
-  },
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'your-domain.com',
+      pathname: '/**',
+    },
+  ],
+  dangerouslyAllowSVG: true,
+},
   // Configuration for handling server-side rendering
   experimental: {
     // This setting helps with hydration issues
