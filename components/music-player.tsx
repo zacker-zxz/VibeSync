@@ -38,7 +38,7 @@ export function MusicPlayer({ currentTrack, isPlaying, onPlayPause, onNext, onPr
       <div className="relative mb-6">
         <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
           <Image
-            src={currentTrack.cover || "/placeholder.svg"}
+            src="/vibe.jpg"
             alt={currentTrack.album}
             width={300}
             height={300}
