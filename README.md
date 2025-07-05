@@ -1,30 +1,60 @@
-# Vibesync design concept
+# VibeSync
+# 🎵 Context-Aware Music Recommendation System
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Overview
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/tejastayade4-gmailcoms-projects/v0-vibesync-design-concept)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/irZcsu0X3tR)
+Basic Protoype hosted on Vercel - https://vibe-sync-coral.vercel.app/
 
-## Overview
+A smart music recommendation application that curates personalized playlists based on your travel destination, current mood, and real-time weather conditions. This innovative system combines multiple contextual factors to deliver the perfect soundtrack for any moment.
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+🌟 Key Features
 
-## Deployment
+🌍 Location-Based Recommendations
+- Recommends music that matches your travel destination's culture and vibe
+- Suggests popular tracks from the region you're visiting
+- Incorporates local musical traditions and trending genres
 
-Your project is live at:
+🎭 Mood-Based Curation
+- Analyzes user-selected mood states
+- Dynamically adjusts music selection based on emotional context
+- Supports mood transitions throughout the day
 
-**[https://vercel.com/tejastayade4-gmailcoms-projects/v0-vibesync-design-concept](https://vercel.com/tejastayade4-gmailcoms-projects/v0-vibesync-design-concept)**
+🌤️ Weather-Responsive Music
+- Fetches current weather conditions in real-time
+- Matches musical genres and tempos to weather patterns
+- Considers seasonal preferences and atmospheric conditions
 
-## Build your app
+![Screenshot2025-07-05045720](./lib/Screenshot2025-07-05045720.png)
+![Screenshot2025-07-05045628](./lib/Screenshot2025-07-05045628.png)
 
-Continue building your app on:
 
-**[https://v0.dev/chat/projects/irZcsu0X3tR](https://v0.dev/chat/projects/irZcsu0X3tR)**
+🛠️ Installation & Setup
 
-## How It Works
+```bash
+# Clone the repository
+git clone https://github.com/zacker-zxz/VibeSync.git
+cd VibeSync
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Add your API keys for weather, location, and music services
+
+# Start development server
+npm run dev 
+```
+
+📄 License
+
+This project is licensed under the MIT License.
+
+📞 Support & Contact
+
+- Issues: Please report bugs via GitHub Issues
+- gmail - tejastayade4@gmail.com
+          aryan201107@gmail.com
+
+
+*Creating the perfect soundtrack for every moment, wherever you are. 🎵*
