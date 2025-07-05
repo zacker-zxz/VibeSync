@@ -91,7 +91,7 @@ const totalTime = duration
               transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
             >
               <img
-                src={currentTrack.albumArt || "/placeholder.svg?height=300&width=300"}
+                src={currentTrack.albumArt || "https://media.istockphoto.com/id/480524526/vector/light-music-notes-on-background.jpg?s=612x612&w=0&k=20&c=2IX2dCH2dibMiOpnRaYv8lVHuldGuloiN9lvrr2J9H0="}
                 alt={`${currentTrack.title} album art`}
                 className="w-full h-full object-cover"
               />

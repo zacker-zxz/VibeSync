@@ -38,7 +38,7 @@ export function MusicPlayer({ currentTrack, isPlaying, onPlayPause, onNext, onPr
       <div className="relative mb-6">
         <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
           <Image
-            src={currentTrack.cover || "/placeholder.svg"}
+            src={currentTrack.cover || "https://media.istockphoto.com/id/480524526/vector/light-music-notes-on-background.jpg?s=612x612&w=0&k=20&c=2IX2dCH2dibMiOpnRaYv8lVHuldGuloiN9lvrr2J9H0="}
             alt={currentTrack.album}
             width={300}
             height={300}
