@@ -22,7 +22,7 @@ A smart music recommendation application that curates personalized playlists bas
 - Matches musical genres and tempos to weather patterns
 - Considers seasonal preferences and atmospheric conditions
 
-![Screenshot2025-07-05 045720](./lib/Screenshot2025-07-05 045720.png)
+![Screenshot2025-07-05 045720](C:\Users\tejas\Documents\github\Zacker\VibeSync\lib\Screenshot2025-07-05 045628.png)
 ![Screenshot2025-07-05 045628](./lib/Screenshot2025-07-05 045628.png)
 
 
