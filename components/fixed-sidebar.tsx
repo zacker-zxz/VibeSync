@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Settings, Heart, X, Save, Palette, Home, Music, TrendingUp, User } from "lucide-react"
+import { Settings, Heart, X, Save, Palette, Home, Music, TrendingUp, User, LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 
@@ -113,6 +113,23 @@ export function FixedSidebar() {
             </motion.div>
           ))}
         </nav>
+         {/* Logout Button */}
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.7 }}
+        >
+          <motion.button
+            onClick={handleLogout}
+            className="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-red-400 hover:text-red-300 hover:border-red-500/50 hover:bg-red-500/30 transition-all duration-300 group"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            title="Logout"
+          >
+            <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          </motion.button>
+        </motion.div>
 
         {/* Bottom Indicator */}
         <motion.div
@@ -235,10 +252,18 @@ export function FixedSidebar() {
 
                     <button
                       onClick={handleSaveSettings}
-                      className="w-full flex items-center justify-center space-x-2 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-400 hover:to-pink-400 transition-all"
+                      className="w-full flex items-center justify-center space-x-2 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-400 hover:to-pink-400 transition-all mb-4"
                     >
                       <Save className="w-4 h-4" />
                       <span>Save Settings</span>
+                    </button>
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center justify-center space-x-2 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-lg transition-all text-red-400"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Logout</span>
                     </button>
                   </motion.div>
                 )}

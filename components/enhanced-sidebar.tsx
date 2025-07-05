@@ -82,7 +82,7 @@ export function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
 
           {/* Sidebar */}
           <motion.div
-            className="fixed left-0 top-0 h-full w-96 bg-gray-900/95 backdrop-blur-md border-r border-purple-500/30 z-50 overflow-y-auto"
+            className="fixed left-0 top-0 h-full w-96 bg-gray-900/95 backdrop-blur-md border-r border-purple-500/30 z-50 flex flex-col"
             initial={{ x: -400 }}
             animate={{ x: 0 }}
             exit={{ x: -400 }}
@@ -120,8 +120,8 @@ export function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
               ))}
             </div>
 
-            {/* Tab Content */}
-            <div className="p-6">
+            {/* Tab Content - Scrollable Area */}
+            <div className="flex-1 overflow-y-auto p-6">
               {activeTab === "settings" && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                   <div>
@@ -275,8 +275,8 @@ export function EnhancedSidebar({ isOpen, onClose }: SidebarProps) {
               )}
             </div>
 
-            {/* Logout Button */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-purple-500/20">
+            {/* Logout Button - Fixed at bottom */}
+            <div className="p-6 border-t border-purple-500/20 bg-gray-900/95">
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center justify-center space-x-2 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-lg transition-all text-red-400"
