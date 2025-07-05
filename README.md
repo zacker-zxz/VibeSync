@@ -3,7 +3,7 @@
 
 ## Overview
 
-Live Demo: [https://vibe-sync-coral.vercel.app/](https://vibe-sync-coral.vercel.app/)
+Live Demo: [https://vibe-sync-5um1.vercel.app/](https://vibe-sync-5um1.vercel.app/)
 
 VibeSync is a next-generation music recommendation platform that curates personalized playlists based on your **location**, **mood**, and **real-time weather**. It creatively adapts its visual and audio experience using data from public APIs and offers a seamless, interactive user journey.
 
