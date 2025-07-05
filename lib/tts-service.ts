@@ -6,13 +6,15 @@ export interface TTSOptions {
 }
 
 export class TTSService {
-  private synth: SpeechSynthesis
-  private isSupported: boolean
+  private synth: SpeechSynthesis | null = null
+  private isSupported: boolean = false
   private currentUtterance: SpeechSynthesisUtterance | null = null
 
   constructor() {
-    this.synth = window.speechSynthesis
-    this.isSupported = "speechSynthesis" in window
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      this.synth = window.speechSynthesis
+      this.isSupported = true
+    }
   }
 
   isAvailable(): boolean {
@@ -20,15 +22,16 @@ export class TTSService {
   }
 
   getVoices(): SpeechSynthesisVoice[] {
-    return this.synth.getVoices()
+    return this.synth ? this.synth.getVoices() : []
   }
 
   speak(text: string, options: TTSOptions = {}): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (!this.isSupported) {
+      if (!this.isSupported || !this.synth) {
         reject(new Error("Text-to-speech is not supported in this browser"))
         return
       }
+      // ...existing code...
 
       // Stop any current speech
       this.stop()
@@ -61,30 +64,30 @@ export class TTSService {
   }
 
   stop(): void {
-    if (this.synth.speaking) {
+    if (this.synth && this.synth.speaking) {
       this.synth.cancel()
     }
     this.currentUtterance = null
   }
 
   pause(): void {
-    if (this.synth.speaking) {
+    if (this.synth && this.synth.speaking) {
       this.synth.pause()
     }
   }
 
   resume(): void {
-    if (this.synth.paused) {
+    if (this.synth && this.synth.paused) {
       this.synth.resume()
     }
   }
 
   isSpeaking(): boolean {
-    return this.synth.speaking
+    return this.synth ? this.synth.speaking : false
   }
 
   isPaused(): boolean {
-    return this.synth.paused
+    return this.synth ? this.synth.paused : false
   }
 }
 
