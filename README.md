@@ -3,6 +3,8 @@
 
 Overview
 
+Basic Protoype hosted on Vercel - https://vibe-sync-coral.vercel.app/
+
 A smart music recommendation application that curates personalized playlists based on your travel destination, current mood, and real-time weather conditions. This innovative system combines multiple contextual factors to deliver the perfect soundtrack for any moment.
 
 🌟 Key Features
