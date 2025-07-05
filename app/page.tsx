@@ -104,7 +104,7 @@ export default function HomePage() {
             >
               Discover music that matches your mood, location, and the world around you.
               <br />
-              Let AI curate the perfect soundtrack for every moment of your life.
+              Let it curate the perfect soundtrack for every moment of your life.
             </motion.p>
 
             <motion.div
