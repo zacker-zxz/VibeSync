@@ -9,6 +9,7 @@ export interface Track {
   mood: string
 }
 
+/* Removed duplicate Track type definition */
 export const dummyTracks: Track[] = [
   {
     id: 1,

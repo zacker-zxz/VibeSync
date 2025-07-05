@@ -56,8 +56,9 @@ export function EnhancedMusicPlayer({
     return `${mins}:${secs.toString().padStart(2, "0")}`
   }
 
-  const currentTime = Math.floor((progress / 100) * (currentTrack.duration || 180))
-  const totalTime = currentTrack.duration || 180
+  const duration = Number(currentTrack.duration) || 180
+  const currentTime = Math.floor((progress / 100) * duration)
+  const totalTime = duration
 
   // Apply weather theme styles
   const getWeatherStyles = () => {
