@@ -125,14 +125,7 @@ export default function HomePage() {
                 <ArrowRight className="w-5 h-5" />
               </Button>
 
-              <Link href="/app">
-                <Button
-                  variant="outline"
-                  className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 bg-transparent"
-                >
-                  Explore Demo
-                </Button>
-              </Link>
+              
             </motion.div>
           </motion.div>
 
