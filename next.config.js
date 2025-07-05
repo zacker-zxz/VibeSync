@@ -6,7 +6,7 @@ const nextConfig = {
   remotePatterns: [
     {
       protocol: 'https',
-      hostname: 'your-domain.com',
+      hostname: 'media.istockphoto.com',
       pathname: '/**',
     },
   ],
